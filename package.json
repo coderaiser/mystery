@@ -1,0 +1,56 @@
+{
+  "name": "mystery",
+  "version": "1.0.0",
+  "description": "flawless arrays processing",
+  "main": "lib/mystery.js",
+  "scripts": {
+    "test": "tape 'test/**/*.js'",
+    "watch": "nodemon --watch lib --watch test -d 0.3 --exec",
+    "watch:test": "npm run watch -- npm test",
+    "jscs": "jscs --esnext lib test",
+    "jshint": "jshint lib test",
+    "eslint": "eslint lib test",
+    "lint": "redrun jshint jscs eslint",
+    "jscs-fix": "npm run jscs --fix",
+    "coverage": "nyc npm test",
+    "report": "nyc report --reporter=text-lcov | coveralls"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/coderaiser/node-mystery.git"
+  },
+  "keywords": [
+    "array",
+    "filter",
+    "map",
+    "processing",
+    "foreach",
+    "for",
+    "emitter",
+    "stream",
+    "data"
+  ],
+  "author": "coderaiser <mnemonic.enemy@gmail.com> (http://coderaiser.github.io/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/coderaiser/node-mystery/issues"
+  },
+  "homepage": "https://github.com/coderaiser/node-mystery",
+  "engines": {
+    "node": ">=4"
+  },
+  "devDependencies": {
+    "coveralls": "^2.11.6",
+    "jscs": "^3.0.1",
+    "jshint": "^2.8.0",
+    "nodemon": "^1.9.2",
+    "nyc": "^6.1.1",
+    "redrun": "^3.0.0",
+    "tape": "^4.5.1"
+  },
+  "dependencies": {
+    "currify": "^1.0.0",
+    "mapa": "^1.0.0",
+    "squad": "^1.1.3"
+  }
+}

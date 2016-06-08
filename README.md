@@ -10,7 +10,7 @@ Flawless arrays processing.
 
 When you use `forEach`, `map`, `filter` you have 2 cons to think about:
 
-- it is not as simple as could be add and remove elements
+- it is not as simple as could be add and remove elements in the middle of array
 - you should pass through the array again and again
 
 This is where `mystery` shows it's proses. It processes elements of an array one-by-one.
@@ -21,18 +21,19 @@ So you have only one array walk. Similar to the way of [node.js stream works](ht
 
 ```js
 const mystery = require('mystery');
-const {map, filter, take, append} = mystery;
+const {map, filter, take, append, insert} = mystery;
 const mapper = mystery([
     map((a) => a * a),
     filter((a) => a > 10),
     take(2),
-    append(['yes', 'you', 'can']
+    append(['yes', 'you', 'can'],
+    insert(4, 'definitely')
 ]);
 
 mapper([1, 2, 3, 4, 5], (array) => {
     console.log(array);
     // returns
-    [16, 25, 'yes', 'you', 'can']
+    [16, 25, 'yes', 'you', 'definitely', 'can']
 });
 
 ```

@@ -8,6 +8,7 @@ const filter = mystery.filter;
 const append = mystery.append;
 const prepend = mystery.prepend;
 const sort = mystery.sort;
+const insert = mystery.insert;
 
 test('use a few filters', (t) => {
     const fn = mystery([
@@ -105,6 +106,17 @@ test('sort', (t) => {
     
     fn([3, 20, 1, 5], (array) => {
         t.deepEqual(array, [1, 3, 5, 20], 'should result be processed');
+        t.end();
+    });
+});
+
+test('insert', (t) => {
+    const fn = mystery([
+        insert(2, 'hello')
+    ]);
+    
+    fn([3, 20, 1], (array) => {
+        t.deepEqual(array, [3, 20, 'hello', 1], 'should result be processed');
         t.end();
     });
 });

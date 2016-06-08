@@ -13,7 +13,7 @@ When you use `forEach`, `map`, `filter` you have 2 cons to think about:
 - it is not as simple as could be add and remove elements in the middle of array
 - you should pass through the array again and again
 
-This is where `mystery` shows it's proses. It processes elements of an array one-by-one.
+This is where `mystery` shows it's pros. It processes elements of an array one-by-one.
 So you have only one array walk. Similar to the way of [node.js stream works](https://nodejs.org/api/stream.html),
 `mystery` is something like `pipe` it joins all `transforms` which are [event emitters](https://nodejs.org/api/events.html) from the inside.
 

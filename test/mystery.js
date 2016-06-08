@@ -21,6 +21,22 @@ test('use a few filters', (t) => {
     });
 });
 
+test('reuse mystery mapper', (t) => {
+    const fn = mystery([
+        filter(a => a > 1),
+        map(a => ++a)
+    ]);
+    
+    fn([1, 2, 3, 4], (array) => {
+        t.deepEqual(array, [3, 4, 5], 'should result be filtered');
+    });
+    
+    fn([2, 3, 4, 5], (array) => {
+        t.deepEqual(array, [3, 4, 5, 6], 'should result be filtered');
+        t.end();
+    });
+});
+
 test('append', (t) => {
     const fn = mystery([
         append([9, 8, 7, 6])
@@ -107,3 +123,4 @@ test('arguments: not function', (t) => {
     t.throws(fn, /funcs should contain functions only!/, 'should throw when arguments no function');
     t.end();
 });
+

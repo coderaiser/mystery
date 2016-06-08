@@ -27,7 +27,7 @@ const mapper = mystery([
     append(['yes', 'you', 'can']
 ]);
 
-mapper([1,2,3,4,5], (array) => {
+mapper([1, 2, 3, 4, 5], (array) => {
     console.log(array);
     // returns
     [16, 25, 'yes', 'you', 'can']

@@ -9,6 +9,7 @@ const append = mystery.append;
 const prepend = mystery.prepend;
 const sort = mystery.sort;
 const insert = mystery.insert;
+const intersperse = mystery.intersperse;
 
 test('use a few filters', (t) => {
     const fn = mystery([
@@ -117,6 +118,17 @@ test('insert', (t) => {
     
     fn([3, 20, 1], (array) => {
         t.deepEqual(array, [3, 20, 'hello', 1], 'should result be processed');
+        t.end();
+    });
+});
+
+test('intersperse', (t) => {
+    const fn = mystery([
+        intersperse('|')
+    ]);
+    
+    fn([1, 2, 3, 4], (array) => {
+        t.deepEqual(array, [1, '|', 2, '|', 3, '|', 4], 'should insert element');
         t.end();
     });
 });

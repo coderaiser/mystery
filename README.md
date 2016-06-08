@@ -89,8 +89,7 @@ first([1, 2, 3, 4, 5], (array) => {
 
 ```
 
-You can find more at `lib/transforms`.
-
+You can find more examples at `lib/transforms`.
 
 ## License
 

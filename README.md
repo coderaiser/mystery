@@ -38,6 +38,26 @@ mapper([1, 2, 3, 4, 5], (array) => {
 
 ```
 
+## Environments
+
+### Node.js
+
+In old `node.js` environments that supports `es5` only, `mystery` could be used with:
+
+```js
+var mystery = require('mystery/legacy');
+```
+
+### Web Browser
+
+`mystery` could be installed via `bower` with:
+
+```sh
+bower install mystery --save
+```
+
+When loaded in browser `mystery` uses global variable with same name (when `browserify` or `webpack` did not used).
+
 ## Transforms
 
 You can use any of built-in transforms or write your own.

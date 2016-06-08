@@ -1,0 +1,26 @@
+{
+  "name": "mystery",
+  "description": "flawless arrays processing",
+  "main": "dist/myster.min.js",
+  "authors": [
+    "coderaiser <mnemonic.enemy@gmail.com> (http://coderaiser.github.io/)"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "array",
+    "filter",
+    "map",
+    "processing",
+    "foreach",
+    "for",
+    "emitter",
+    "stream",
+    "data"
+  ],
+  "homepage": "https://github.com/coderaiser/node-mystery",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "test",
+  ]
+}

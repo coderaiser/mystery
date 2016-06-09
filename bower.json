@@ -1,7 +1,7 @@
 {
   "name": "mystery",
   "description": "flawless arrays processing",
-  "main": "dist/myster.min.js",
+  "main": "dist/mystery.js",
   "authors": [
     "coderaiser <mnemonic.enemy@gmail.com> (http://coderaiser.github.io/)"
   ],

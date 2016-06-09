@@ -1,0 +1,14 @@
+2016.06.09, v1.1.0
+
+fix:
+- (mystery) rm listeners at the end
+
+feature:
+- (mystery) add browser, node <= 4 support
+- (intersperse) add
+- (insert) add
+- (map) speed up: x10
+- (package) add eslint
+- (mystery) add .*
+- (mystery) add
+

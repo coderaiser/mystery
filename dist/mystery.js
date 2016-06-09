@@ -40,7 +40,21 @@ module.exports = function (fn) {
 
     return emitter;
 };
-},{"events":12}],2:[function(require,module,exports){
+},{"events":14}],2:[function(require,module,exports){
+'use strict';
+
+module.exports = function (emitters) {
+    emitters.reduce(function (current, next) {
+        current.on('value', function (value) {
+            next.emit('item', value);
+        });
+
+        return next;
+    });
+
+    return emitters;
+};
+},{}],3:[function(require,module,exports){
 'use strict';
 
 module.exports = function (array) {
@@ -54,7 +68,17 @@ module.exports = function (array) {
 
     return fn;
 };
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
+'use strict';
+
+var mapa = require('mapa');
+
+module.exports = function () {
+    return function (value, index, emit) {
+        if (!Array.isArray(value)) emit(value);else mapa(emit, value);
+    };
+};
+},{"mapa":15}],5:[function(require,module,exports){
 'use strict';
 
 module.exports = function (condition) {
@@ -62,7 +86,7 @@ module.exports = function (condition) {
         condition(value, index) && emit(value);
     };
 };
-},{}],4:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 'use strict';
 
 module.exports = function (number, element) {
@@ -72,7 +96,7 @@ module.exports = function (number, element) {
         emit(value);
     };
 };
-},{}],5:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 'use strict';
 
 module.exports = function (element) {
@@ -86,7 +110,7 @@ module.exports = function (element) {
         emit(value);
     };
 };
-},{}],6:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 'use strict';
 
 module.exports = function (fn) {
@@ -94,7 +118,7 @@ module.exports = function (fn) {
         emit(fn(value, index));
     };
 };
-},{}],7:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 'use strict';
 
 module.exports = function (array) {
@@ -108,7 +132,7 @@ module.exports = function (array) {
 
     return fn;
 };
-},{}],8:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 'use strict';
 
 module.exports = function (fn) {
@@ -123,7 +147,7 @@ module.exports = function (fn) {
 
     return sort;
 };
-},{}],9:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 'use strict';
 
 module.exports = function (number) {
@@ -139,7 +163,7 @@ module.exports = function (number) {
 
     return fn;
 };
-},{}],10:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 'use strict';
 
 var filter = require('./filter');
@@ -149,7 +173,7 @@ module.exports = function (number) {
         return index < number;
     });
 };
-},{"./filter":3}],11:[function(require,module,exports){
+},{"./filter":5}],13:[function(require,module,exports){
 'use strict';
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
@@ -173,7 +197,7 @@ function currify(fn) {
 function check(fn) {
     if (typeof fn !== 'function') throw Error('fn should be function!');
 }
-},{}],12:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -473,7 +497,7 @@ function isUndefined(arg) {
   return arg === void 0;
 }
 
-},{}],13:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 (function(global) {
     'use strict';
     
@@ -504,7 +528,7 @@ function isUndefined(arg) {
     }
 })(this);
 
-},{}],14:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 (function(global) {
     'use strict';
     
@@ -567,28 +591,31 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 var Emitter = require('events').EventEmitter;
 var currify = require('currify');
-var mapa = require('mapa');
 var squad = require('squad');
 
 var chain = require('./chain');
+var join = require('./join');
+var decouple = require('./transform/decouple');
 
 var pipe = currify(function (emitters, array, fn) {
-    var first = emitters[0];
     var collector = collect(fn);
     var remover = remove(emitters);
+    var decoupler = chain(decouple());
+    var first = decoupler;
+    var concat = function concat(array) {
+        return [].concat.apply([], array);
+    };
 
-    join(emitters.concat(collector, remover));
+    join(concat([decoupler, emitters, collector, remover]));
 
     first.emit('item', {
         status: 'start'
     });
 
-    mapa(function (value, index) {
-        first.emit('item', {
-            value: value,
-            index: index
-        });
-    }, array);
+    first.emit('item', {
+        value: array,
+        index: 0
+    });
 
     first.emit('item', {
         status: 'end'
@@ -606,23 +633,12 @@ module.exports.take = require('./transform/take');
 module.exports.takeLast = require('./transform/take-last');
 module.exports.insert = require('./transform/insert');
 module.exports.intersperse = require('./transform/intersperse');
+module.exports.decouple = decouple;
 
 function mapChain(funcs) {
     return funcs.map(function (fn) {
         return chain(fn);
     });
-}
-
-function join(emitters) {
-    emitters.reduce(function (current, next) {
-        current.on('value', function (value) {
-            next.emit('item', value);
-        });
-
-        return next;
-    });
-
-    return emitters;
 }
 
 function remove(emitters) {
@@ -661,5 +677,5 @@ function check(funcs) {
 
     return funcs;
 }
-},{"./chain":1,"./transform/append":2,"./transform/filter":3,"./transform/insert":4,"./transform/intersperse":5,"./transform/map":6,"./transform/prepend":7,"./transform/sort":8,"./transform/take":10,"./transform/take-last":9,"currify":11,"events":12,"mapa":13,"squad":14}]},{},["mystery"])("mystery")
+},{"./chain":1,"./join":2,"./transform/append":3,"./transform/decouple":4,"./transform/filter":5,"./transform/insert":6,"./transform/intersperse":7,"./transform/map":8,"./transform/prepend":9,"./transform/sort":10,"./transform/take":12,"./transform/take-last":11,"currify":13,"events":14,"squad":16}]},{},["mystery"])("mystery")
 });

@@ -1,3 +1,12 @@
+2016.06.09, v1.2.0
+
+fix:
+- (bower) main
+
+feature:
+- (decouple) add
+
+
 2016.06.09, v1.1.0
 
 fix:

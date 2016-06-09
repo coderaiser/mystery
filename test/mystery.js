@@ -10,6 +10,7 @@ const prepend = mystery.prepend;
 const sort = mystery.sort;
 const insert = mystery.insert;
 const intersperse = mystery.intersperse;
+const decouple = mystery.decouple;
 
 test('use a few filters', (t) => {
     const fn = mystery([
@@ -129,6 +130,17 @@ test('intersperse', (t) => {
     
     fn([1, 2, 3, 4], (array) => {
         t.deepEqual(array, [1, '|', 2, '|', 3, '|', 4], 'should insert element');
+        t.end();
+    });
+});
+
+test('decouple', (t) => {
+    const fn = mystery([
+        decouple()
+    ]);
+    
+    fn([[1, 2, 3], 4, [5, 6]], (array) => {
+        t.deepEqual(array, [1, 2, 3, 4, 5, 6], 'should insert element');
         t.end();
     });
 });

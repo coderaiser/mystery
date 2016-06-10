@@ -40,7 +40,7 @@ module.exports = function (fn) {
 
     return emitter;
 };
-},{"events":14}],2:[function(require,module,exports){
+},{"events":16}],2:[function(require,module,exports){
 'use strict';
 
 module.exports = function (emitters) {
@@ -78,7 +78,7 @@ module.exports = function () {
         if (!Array.isArray(value)) emit(value);else mapa(emit, value);
     };
 };
-},{"mapa":15}],5:[function(require,module,exports){
+},{"mapa":17}],5:[function(require,module,exports){
 'use strict';
 
 module.exports = function (condition) {
@@ -121,6 +121,31 @@ module.exports = function (fn) {
 },{}],9:[function(require,module,exports){
 'use strict';
 
+module.exports = function () {
+    var array = [];
+
+    var merge = function merge(value) {
+        array.push(value);
+    };
+
+    merge.end = function (emit) {
+        emit(array);
+    };
+
+    return merge;
+};
+},{}],10:[function(require,module,exports){
+'use strict';
+
+module.exports = function (fn) {
+    return function (value, index, emit) {
+        fn(value);
+        emit(value);
+    };
+};
+},{}],11:[function(require,module,exports){
+'use strict';
+
 module.exports = function (array) {
     var fn = function fn(value, index, emit) {
         emit(value);
@@ -132,7 +157,7 @@ module.exports = function (array) {
 
     return fn;
 };
-},{}],10:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 'use strict';
 
 module.exports = function (fn) {
@@ -147,7 +172,7 @@ module.exports = function (fn) {
 
     return sort;
 };
-},{}],11:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 'use strict';
 
 module.exports = function (number) {
@@ -163,7 +188,7 @@ module.exports = function (number) {
 
     return fn;
 };
-},{}],12:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 'use strict';
 
 var filter = require('./filter');
@@ -173,7 +198,7 @@ module.exports = function (number) {
         return index < number;
     });
 };
-},{"./filter":5}],13:[function(require,module,exports){
+},{"./filter":5}],15:[function(require,module,exports){
 'use strict';
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
@@ -197,7 +222,7 @@ function currify(fn) {
 function check(fn) {
     if (typeof fn !== 'function') throw Error('fn should be function!');
 }
-},{}],14:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -497,7 +522,7 @@ function isUndefined(arg) {
   return arg === void 0;
 }
 
-},{}],15:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 (function(global) {
     'use strict';
     
@@ -509,12 +534,15 @@ function isUndefined(arg) {
     function mapa(fn, list) {
         check(fn, list);
         
-        var i       = 0,
-            n       = list.length,
+        var n       = list.length,
+            j       = 0,
+            i       = n + 1,
             result  = Array(n);
-          
-        for (i = 0; i < n; i++)
-            result[i] = fn(list[i], i, n, list);
+        
+        while(--i) {
+            j = n - i;
+            result[j] = fn(list[j], j, list);
+        }
           
         return result;
     }
@@ -528,7 +556,7 @@ function isUndefined(arg) {
     }
 })(this);
 
-},{}],16:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 (function(global) {
     'use strict';
     
@@ -596,17 +624,20 @@ var squad = require('squad');
 var chain = require('./chain');
 var join = require('./join');
 var decouple = require('./transform/decouple');
+var pass = require('./transform/pass');
+var merge = require('./transform/merge');
 
 var pipe = currify(function (emitters, array, fn) {
-    var collector = collect(fn);
     var remover = remove(emitters);
     var decoupler = chain(decouple());
+    var passer = chain(pass(fn));
+    var merger = chain(merge());
     var first = decoupler;
     var concat = function concat(array) {
         return [].concat.apply([], array);
     };
 
-    join(concat([decoupler, emitters, collector, remover]));
+    join(concat([decoupler, emitters, merger, passer, remover]));
 
     first.emit('item', {
         status: 'start'
@@ -634,6 +665,8 @@ module.exports.takeLast = require('./transform/take-last');
 module.exports.insert = require('./transform/insert');
 module.exports.intersperse = require('./transform/intersperse');
 module.exports.decouple = decouple;
+module.exports.pass = pass;
+module.exports.join = join;
 
 function mapChain(funcs) {
     return funcs.map(function (fn) {
@@ -651,19 +684,6 @@ function remove(emitters) {
     });
 }
 
-function collect(fn) {
-    var emitter = new Emitter();
-    var array = [];
-
-    emitter.on('item', function (item) {
-        if (item.status === 'end') fn(array);else if (!item.status) array.push(item.value);
-
-        emitter.emit('value', item);
-    });
-
-    return emitter;
-}
-
 function check(funcs) {
     if (!Array.isArray(funcs)) throw Error('funcs should be an array!');
 
@@ -677,5 +697,5 @@ function check(funcs) {
 
     return funcs;
 }
-},{"./chain":1,"./join":2,"./transform/append":3,"./transform/decouple":4,"./transform/filter":5,"./transform/insert":6,"./transform/intersperse":7,"./transform/map":8,"./transform/prepend":9,"./transform/sort":10,"./transform/take":12,"./transform/take-last":11,"currify":13,"events":14,"squad":16}]},{},["mystery"])("mystery")
+},{"./chain":1,"./join":2,"./transform/append":3,"./transform/decouple":4,"./transform/filter":5,"./transform/insert":6,"./transform/intersperse":7,"./transform/map":8,"./transform/merge":9,"./transform/pass":10,"./transform/prepend":11,"./transform/sort":12,"./transform/take":14,"./transform/take-last":13,"currify":15,"events":16,"squad":18}]},{},["mystery"])("mystery")
 });

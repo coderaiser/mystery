@@ -21,7 +21,7 @@
     "report": "nyc report --reporter=text-lcov | coveralls",
     "6to5": "babel lib -d legacy",
     "wisdom": "npm run build",
-    "minify": "minify dist/mystery.legacy.js > dist/mystery.min.js",
+    "minify": "minify dist/mystery.js > dist/mystery.min.js",
     "mkdir": "mkdirp dist legacy",
     "build": "redrun mkdir 6to5 legacy:index bundle:legacy minify",
     "bundle:base": "browserify -s mystery --ng false",

@@ -31,7 +31,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/coderaiser/node-mystery.git"
+    "url": "git://github.com/coderaiser/mystery.git"
   },
   "keywords": [
     "array",
@@ -47,9 +47,9 @@
   "author": "coderaiser <mnemonic.enemy@gmail.com> (http://coderaiser.github.io/)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/coderaiser/node-mystery/issues"
+    "url": "https://github.com/coderaiser/mystery/issues"
   },
-  "homepage": "https://github.com/coderaiser/node-mystery",
+  "homepage": "https://github.com/coderaiser/mystery",
   "engines": {
     "node": ">=4"
   },

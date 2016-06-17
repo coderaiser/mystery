@@ -17,7 +17,7 @@
     "stream",
     "data"
   ],
-  "homepage": "https://github.com/coderaiser/node-mystery",
+  "homepage": "https://github.com/coderaiser/mystery",
   "ignore": [
     "**/.*",
     "node_modules",

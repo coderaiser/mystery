@@ -11,6 +11,7 @@ const sort = mystery.sort;
 const insert = mystery.insert;
 const intersperse = mystery.intersperse;
 const decouple = mystery.decouple;
+const mapsome = mystery.mapsome;
 
 test('use a few filters', (t) => {
     const fn = mystery([
@@ -141,6 +142,36 @@ test('decouple', (t) => {
     
     fn([[1, 2, 3], 4, [5, 6]], (array) => {
         t.deepEqual(array, [1, 2, 3, 4, 5, 6], 'should insert element');
+        t.end();
+    });
+});
+
+test('mapsome', (t) => {
+    const expect = {
+        name: 'mystery'
+    };
+    
+    const packages = {
+        '/home/coderaiser': {
+            error: Error('no'),
+            info: null
+        },
+        '/home': {
+            error: Error('no'),
+            info: null
+        },
+        '/': {
+            error: null,
+            info: expect
+        }
+    }
+    const find = mystery([
+        mapsome((dir) => packages[dir].info)
+    ]);
+    
+    find(['/home/coderaiser', '/home', '/'], (array) => {
+        const result = array.pop();
+        t.equal(result, expect, 'should filter');
         t.end();
     });
 });

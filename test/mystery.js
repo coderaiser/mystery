@@ -164,7 +164,8 @@ test('mapsome', (t) => {
             error: null,
             info: expect
         }
-    }
+    };
+    
     const find = mystery([
         mapsome((dir) => packages[dir].info)
     ]);

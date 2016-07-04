@@ -40,7 +40,7 @@ module.exports = function (fn) {
 
     return emitter;
 };
-},{"events":16}],2:[function(require,module,exports){
+},{"events":17}],2:[function(require,module,exports){
 'use strict';
 
 module.exports = function (emitters) {
@@ -78,7 +78,7 @@ module.exports = function () {
         if (!Array.isArray(value)) emit(value);else mapa(emit, value);
     };
 };
-},{"mapa":17}],5:[function(require,module,exports){
+},{"mapa":18}],5:[function(require,module,exports){
 'use strict';
 
 module.exports = function (condition) {
@@ -121,6 +121,32 @@ module.exports = function (fn) {
 },{}],9:[function(require,module,exports){
 'use strict';
 
+var id = function id(a) {
+    return a;
+};
+
+module.exports = function (map) {
+    var condition = arguments.length <= 1 || arguments[1] === undefined ? id : arguments[1];
+
+    var done = void 0;
+    var result = void 0;
+
+    var mapsome = function mapsome(value) {
+        if (done) return;
+
+        result = map(value);
+        done = condition(result);
+    };
+
+    mapsome.end = function (emit) {
+        emit(result);
+    };
+
+    return mapsome;
+};
+},{}],10:[function(require,module,exports){
+'use strict';
+
 module.exports = function () {
     var array = [];
 
@@ -134,7 +160,7 @@ module.exports = function () {
 
     return merge;
 };
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 'use strict';
 
 module.exports = function (fn) {
@@ -143,7 +169,7 @@ module.exports = function (fn) {
         emit(value);
     };
 };
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 'use strict';
 
 module.exports = function (array) {
@@ -157,7 +183,7 @@ module.exports = function (array) {
 
     return fn;
 };
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 'use strict';
 
 module.exports = function (fn) {
@@ -172,7 +198,7 @@ module.exports = function (fn) {
 
     return sort;
 };
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 'use strict';
 
 module.exports = function (number) {
@@ -188,7 +214,7 @@ module.exports = function (number) {
 
     return fn;
 };
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 'use strict';
 
 var filter = require('./filter');
@@ -198,7 +224,7 @@ module.exports = function (number) {
         return index < number;
     });
 };
-},{"./filter":5}],15:[function(require,module,exports){
+},{"./filter":5}],16:[function(require,module,exports){
 'use strict';
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
@@ -222,7 +248,7 @@ function currify(fn) {
 function check(fn) {
     if (typeof fn !== 'function') throw Error('fn should be function!');
 }
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -522,7 +548,7 @@ function isUndefined(arg) {
   return arg === void 0;
 }
 
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 (function(global) {
     'use strict';
     
@@ -556,7 +582,7 @@ function isUndefined(arg) {
     }
 })(this);
 
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 (function(global) {
     'use strict';
     
@@ -664,6 +690,7 @@ module.exports.take = require('./transform/take');
 module.exports.takeLast = require('./transform/take-last');
 module.exports.insert = require('./transform/insert');
 module.exports.intersperse = require('./transform/intersperse');
+module.exports.mapsome = require('./transform/mapsome');
 module.exports.decouple = decouple;
 module.exports.pass = pass;
 module.exports.join = join;
@@ -697,5 +724,5 @@ function check(funcs) {
 
     return funcs;
 }
-},{"./chain":1,"./join":2,"./transform/append":3,"./transform/decouple":4,"./transform/filter":5,"./transform/insert":6,"./transform/intersperse":7,"./transform/map":8,"./transform/merge":9,"./transform/pass":10,"./transform/prepend":11,"./transform/sort":12,"./transform/take":14,"./transform/take-last":13,"currify":15,"events":16,"squad":18}]},{},["mystery"])("mystery")
+},{"./chain":1,"./join":2,"./transform/append":3,"./transform/decouple":4,"./transform/filter":5,"./transform/insert":6,"./transform/intersperse":7,"./transform/map":8,"./transform/mapsome":9,"./transform/merge":10,"./transform/pass":11,"./transform/prepend":12,"./transform/sort":13,"./transform/take":15,"./transform/take-last":14,"currify":16,"events":17,"squad":19}]},{},["mystery"])("mystery")
 });

@@ -1,3 +1,12 @@
+2016.07.04, v1.4.0
+
+feature:
+- (package) eslint v3.0.0
+- (mapsome) add
+- (package) redrun v4.0.0
+- (mystery) node-mystery -> mystery
+
+
 2016.06.10, v1.3.1
 
 fix:

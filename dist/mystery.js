@@ -125,9 +125,8 @@ var id = function id(a) {
     return a;
 };
 
-module.exports = function (map) {
-    var condition = arguments.length <= 1 || arguments[1] === undefined ? id : arguments[1];
-
+module.exports = function (map, condition) {
+    condition = condition || id;
     var done = void 0;
     var result = void 0;
 

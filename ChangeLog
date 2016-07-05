@@ -1,3 +1,9 @@
+2016.07.05, v1.4.1
+
+fix:
+- (mapsome) node v6 -> node v4: default parameters
+
+
 2016.07.04, v1.4.0
 
 feature:

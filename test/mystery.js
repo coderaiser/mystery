@@ -163,6 +163,10 @@ test('mapsome', (t) => {
         '/': {
             error: null,
             info: expect
+        },
+        '': {
+            error: Error(''),
+            info: null
         }
     };
     
@@ -170,7 +174,7 @@ test('mapsome', (t) => {
         mapsome((dir) => packages[dir].info)
     ]);
     
-    find(['/home/coderaiser', '/home', '/'], (array) => {
+    find(['/home/coderaiser', '/home', '/', ''], (array) => {
         const result = array.pop();
         t.equal(result, expect, 'should filter');
         t.end();

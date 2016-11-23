@@ -40,7 +40,7 @@ module.exports = function (fn) {
 
     return emitter;
 };
-},{"events":17}],2:[function(require,module,exports){
+},{"events":18}],2:[function(require,module,exports){
 'use strict';
 
 module.exports = function (emitters) {
@@ -78,7 +78,7 @@ module.exports = function () {
         if (!Array.isArray(value)) emit(value);else mapa(emit, value);
     };
 };
-},{"mapa":18}],5:[function(require,module,exports){
+},{"mapa":19}],5:[function(require,module,exports){
 'use strict';
 
 module.exports = function (condition) {
@@ -224,30 +224,47 @@ module.exports = function (number) {
     });
 };
 },{"./filter":5}],16:[function(require,module,exports){
+module.exports = require('./lib/currify');
+
+},{"./lib/currify":17}],17:[function(require,module,exports){
 'use strict';
 
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
-
-module.exports = currify;
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 var tail = function tail(list) {
     return [].slice.call(list, 1);
 };
+var f = function f(fn) {
+    return [function (a) {
+        return fn.apply(undefined, arguments);
+    }, function (a, b) {
+        return fn.apply(undefined, arguments);
+    }, function (a, b, c) {
+        return fn.apply(undefined, arguments);
+    }];
+};
 
-function currify(fn) {
+module.exports = function currify(fn) {
     check(fn);
 
     var args = tail(arguments);
 
-    if (args.length >= fn.length) return fn.apply(undefined, _toConsumableArray(args));else return function () {
+    if (args.length >= fn.length) return fn.apply(undefined, _toConsumableArray(args));
+
+    var again = function again() {
         return currify.apply(undefined, [fn].concat(_toConsumableArray(args), Array.prototype.slice.call(arguments)));
     };
-}
+
+    var count = fn.length - arguments.length;
+    var func = f(again)[count];
+
+    return func;
+};
 
 function check(fn) {
     if (typeof fn !== 'function') throw Error('fn should be function!');
 }
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -307,8 +324,12 @@ EventEmitter.prototype.emit = function(type) {
       er = arguments[1];
       if (er instanceof Error) {
         throw er; // Unhandled 'error' event
+      } else {
+        // At least give some kind of context to the user
+        var err = new Error('Uncaught, unspecified "error" event. (' + er + ')');
+        err.context = er;
+        throw err;
       }
-      throw TypeError('Uncaught, unspecified "error" event.');
     }
   }
 
@@ -547,7 +568,7 @@ function isUndefined(arg) {
   return arg === void 0;
 }
 
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 (function(global) {
     'use strict';
     
@@ -581,7 +602,7 @@ function isUndefined(arg) {
     }
 })(this);
 
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 (function(global) {
     'use strict';
     
@@ -640,10 +661,10 @@ function isUndefined(arg) {
 },{}],"mystery":[function(require,module,exports){
 'use strict';
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 var Emitter = require('events').EventEmitter;
-var currify = require('currify');
+var currify = require('currify/legacy');
 var squad = require('squad');
 
 var chain = require('./chain');
@@ -723,5 +744,5 @@ function check(funcs) {
 
     return funcs;
 }
-},{"./chain":1,"./join":2,"./transform/append":3,"./transform/decouple":4,"./transform/filter":5,"./transform/insert":6,"./transform/intersperse":7,"./transform/map":8,"./transform/mapsome":9,"./transform/merge":10,"./transform/pass":11,"./transform/prepend":12,"./transform/sort":13,"./transform/take":15,"./transform/take-last":14,"currify":16,"events":17,"squad":19}]},{},["mystery"])("mystery")
+},{"./chain":1,"./join":2,"./transform/append":3,"./transform/decouple":4,"./transform/filter":5,"./transform/insert":6,"./transform/intersperse":7,"./transform/map":8,"./transform/mapsome":9,"./transform/merge":10,"./transform/pass":11,"./transform/prepend":12,"./transform/sort":13,"./transform/take":15,"./transform/take-last":14,"currify/legacy":16,"events":18,"squad":20}]},{},["mystery"])("mystery")
 });

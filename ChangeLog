@@ -1,3 +1,13 @@
+2016.11.23, v1.4.2
+
+feature:
+- (package) currify v2.0.0
+- (package) nyc v9.0.1;
+- (package) nyc v8.1.0
+- (package) redrun v5.0.0
+- (package) nyc v7.0.0
+
+
 2016.07.05, v1.4.1
 
 fix:

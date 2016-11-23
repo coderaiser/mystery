@@ -1,6 +1,6 @@
 {
   "name": "mystery",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "flawless arrays processing",
   "main": "lib/mystery.js",
   "babel": {

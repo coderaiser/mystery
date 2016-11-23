@@ -69,7 +69,7 @@
     "tape": "^4.5.1"
   },
   "dependencies": {
-    "currify": "^1.0.0",
+    "currify": "^2.0.0",
     "mapa": "^2.0.0",
     "squad": "^1.1.3"
   }

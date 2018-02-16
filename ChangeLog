@@ -1,3 +1,18 @@
+2018.02.16, v1.4.3
+
+feature:
+- (package) babel-preset-env
+- (package) squad v2.0.0
+- (package) browserify v16.0.0
+- (package) browserify v15.2.0
+- (package) coveralls v3.0.0
+- (package) minify v3.0.0
+- (package) eslint v4.0.0
+- (package) nyc v11.0.2
+- (package) browserify v14.0.0
+- (package) nyc v10.0.0
+
+
 2016.11.23, v1.4.2
 
 feature:

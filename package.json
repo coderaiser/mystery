@@ -71,6 +71,6 @@
   "dependencies": {
     "currify": "^2.0.0",
     "mapa": "^2.0.0",
-    "squad": "^2.0.0"
+    "squad": "^3.0.0"
   }
 }

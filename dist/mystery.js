@@ -1,72 +1,67 @@
-(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.mystery = f()}})(function(){var define,module,exports;return (function(){function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s}return e})()({1:[function(require,module,exports){
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.mystery = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 'use strict';
 
 var Emitter = require('events').EventEmitter;
 
 var isFunction = function isFunction(fn) {
-    return typeof fn === 'function';
+  return typeof fn === 'function';
 };
+
 var exec = function exec(fn, a, b, c) {
-    return isFunction(fn) && fn(a, b, c);
+  return isFunction(fn) && fn(a, b, c);
 };
 
 module.exports = function (fn) {
-    var emitter = new Emitter();
+  var emitter = new Emitter();
+  var index = -1;
 
-    var index = -1;
-
-    var emit = function emit(value) {
-        ++index;
-
-        emitter.emit('value', {
-            index: index,
-            value: value
-        });
-    };
-
-    emitter.on('item', function (item) {
-        var status = item.status;
-
-        if (!status) {
-            exec(fn, item.value, item.index, emit);
-        } else {
-            exec(fn[status], emit);
-
-            emitter.emit('value', {
-                status: status
-            });
-        }
+  var emit = function emit(value) {
+    ++index;
+    emitter.emit('value', {
+      index: index,
+      value: value
     });
+  };
 
-    return emitter;
+  emitter.on('item', function (item) {
+    var status = item.status;
+
+    if (!status) {
+      exec(fn, item.value, item.index, emit);
+    } else {
+      exec(fn[status], emit);
+      emitter.emit('value', {
+        status: status
+      });
+    }
+  });
+  return emitter;
 };
 },{"events":18}],2:[function(require,module,exports){
 'use strict';
 
 module.exports = function (emitters) {
-    emitters.reduce(function (current, next) {
-        current.on('value', function (value) {
-            next.emit('item', value);
-        });
-
-        return next;
+  emitters.reduce(function (current, next) {
+    current.on('value', function (value) {
+      next.emit('item', value);
     });
-
-    return emitters;
+    return next;
+  });
+  return emitters;
 };
 },{}],3:[function(require,module,exports){
 'use strict';
 
 module.exports = function (array) {
-    var fn = function fn(value, index, emit) {
-        emit(value);
-    };
+  var fn = function fn(value, index, emit) {
+    emit(value);
+  };
 
-    fn.end = function (emit) {
-        array.forEach(emit);
-    };
+  fn.end = function (emit) {
+    array.forEach(emit);
+  };
 
-    return fn;
+  return fn;
 };
 },{}],4:[function(require,module,exports){
 'use strict';
@@ -74,144 +69,143 @@ module.exports = function (array) {
 var mapa = require('mapa');
 
 module.exports = function () {
-    return function (value, index, emit) {
-        if (!Array.isArray(value)) emit(value);else mapa(emit, value);
-    };
+  return function (value, index, emit) {
+    if (!Array.isArray(value)) emit(value);else mapa(emit, value);
+  };
 };
 },{"mapa":19}],5:[function(require,module,exports){
 'use strict';
 
 module.exports = function (condition) {
-    return function (value, index, emit) {
-        condition(value, index) && emit(value);
-    };
+  return function (value, index, emit) {
+    condition(value, index) && emit(value);
+  };
 };
 },{}],6:[function(require,module,exports){
 'use strict';
 
 module.exports = function (number, element) {
-    return function (value, index, emit) {
-        if (index === number) emit(element);
-
-        emit(value);
-    };
+  return function (value, index, emit) {
+    if (index === number) emit(element);
+    emit(value);
+  };
 };
 },{}],7:[function(require,module,exports){
 'use strict';
 
 module.exports = function (element) {
-    var delta = 0;
-    return function (value, index, emit) {
-        if ((index + delta) % 2) {
-            ++delta;
-            emit(element);
-        }
+  var delta = 0;
+  return function (value, index, emit) {
+    if ((index + delta) % 2) {
+      ++delta;
+      emit(element);
+    }
 
-        emit(value);
-    };
+    emit(value);
+  };
 };
 },{}],8:[function(require,module,exports){
 'use strict';
 
 module.exports = function (fn) {
-    return function (value, index, emit) {
-        emit(fn(value, index));
-    };
+  return function (value, index, emit) {
+    emit(fn(value, index));
+  };
 };
 },{}],9:[function(require,module,exports){
 'use strict';
 
 var id = function id(a) {
-    return a;
+  return a;
 };
 
 module.exports = function (map, condition) {
-    condition = condition || id;
-    var done = void 0;
-    var result = void 0;
+  condition = condition || id;
+  var done;
+  var result;
 
-    var mapsome = function mapsome(value) {
-        if (done) return;
+  var mapsome = function mapsome(value) {
+    if (done) return;
+    result = map(value);
+    done = condition(result);
+  };
 
-        result = map(value);
-        done = condition(result);
-    };
+  mapsome.end = function (emit) {
+    emit(result);
+  };
 
-    mapsome.end = function (emit) {
-        emit(result);
-    };
-
-    return mapsome;
+  return mapsome;
 };
 },{}],10:[function(require,module,exports){
 'use strict';
 
 module.exports = function () {
-    var array = [];
+  var array = [];
 
-    var merge = function merge(value) {
-        array.push(value);
-    };
+  var merge = function merge(value) {
+    array.push(value);
+  };
 
-    merge.end = function (emit) {
-        emit(array);
-    };
+  merge.end = function (emit) {
+    emit(array);
+  };
 
-    return merge;
+  return merge;
 };
 },{}],11:[function(require,module,exports){
 'use strict';
 
 module.exports = function (fn) {
-    return function (value, index, emit) {
-        fn(value);
-        emit(value);
-    };
+  return function (value, index, emit) {
+    fn(value);
+    emit(value);
+  };
 };
 },{}],12:[function(require,module,exports){
 'use strict';
 
 module.exports = function (array) {
-    var fn = function fn(value, index, emit) {
-        emit(value);
-    };
+  var fn = function fn(value, index, emit) {
+    emit(value);
+  };
 
-    fn.start = function (emit) {
-        array.forEach(emit);
-    };
+  fn.start = function (emit) {
+    array.forEach(emit);
+  };
 
-    return fn;
+  return fn;
 };
 },{}],13:[function(require,module,exports){
 'use strict';
 
 module.exports = function (fn) {
-    var array = [];
-    var sort = function sort(value) {
-        return array.push(value);
-    };
+  var array = [];
 
-    sort.end = function (emit) {
-        array.sort(fn).forEach(emit);
-    };
+  var sort = function sort(value) {
+    return array.push(value);
+  };
 
-    return sort;
+  sort.end = function (emit) {
+    array.sort(fn).forEach(emit);
+  };
+
+  return sort;
 };
 },{}],14:[function(require,module,exports){
 'use strict';
 
 module.exports = function (number) {
-    var array = [];
+  var array = [];
 
-    var fn = function fn(value) {
-        array.push(value);
-    };
+  var fn = function fn(value) {
+    array.push(value);
+  };
 
-    fn.end = function (emit) {
-        array.slice(array.length - number).forEach(emit);
-    };
+  fn.end = function (emit) {
+    array.slice(array.length - number).forEach(emit);
+  };
 
-    return fn;
+  return fn;
 };
 },{}],15:[function(require,module,exports){
 'use strict';
@@ -219,9 +213,9 @@ module.exports = function (number) {
 var filter = require('./filter');
 
 module.exports = function (number) {
-    return filter(function (value, index) {
-        return index < number;
-    });
+  return filter(function (value, index) {
+    return index < number;
+  });
 };
 },{"./filter":5}],16:[function(require,module,exports){
 module.exports = require('./lib/currify');
@@ -698,24 +692,28 @@ EventEmitter.prototype.removeAllListeners =
       return this;
     };
 
-EventEmitter.prototype.listeners = function listeners(type) {
-  var evlistener;
-  var ret;
-  var events = this._events;
+function _listeners(target, type, unwrap) {
+  var events = target._events;
 
   if (!events)
-    ret = [];
-  else {
-    evlistener = events[type];
-    if (!evlistener)
-      ret = [];
-    else if (typeof evlistener === 'function')
-      ret = [evlistener.listener || evlistener];
-    else
-      ret = unwrapListeners(evlistener);
-  }
+    return [];
 
-  return ret;
+  var evlistener = events[type];
+  if (!evlistener)
+    return [];
+
+  if (typeof evlistener === 'function')
+    return unwrap ? [evlistener.listener || evlistener] : [evlistener];
+
+  return unwrap ? unwrapListeners(evlistener) : arrayClone(evlistener, evlistener.length);
+}
+
+EventEmitter.prototype.listeners = function listeners(type) {
+  return _listeners(this, type, true);
+};
+
+EventEmitter.prototype.rawListeners = function rawListeners(type) {
+  return _listeners(this, type, false);
 };
 
 EventEmitter.listenerCount = function(emitter, type) {
@@ -828,98 +826,102 @@ module.exports = require('./squad');
 },{"./squad":21}],21:[function(require,module,exports){
 'use strict';
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+var compose = [function () {
+    return function () {};
+}, function (f) {
+    return function () {
+        return f.apply(undefined, arguments);
+    };
+}, function (f1, f2) {
+    return function () {
+        return f1(f2.apply(undefined, arguments));
+    };
+}, function (f1, f2, f3) {
+    return function () {
+        return f1(f2(f3.apply(undefined, arguments)));
+    };
+}, function (f1, f2, f3, f4) {
+    return function () {
+        return f1(f2(f3(f4.apply(undefined, arguments))));
+    };
+}, function (f1, f2, f3, f4, f5) {
+    return function () {
+        return f1(f2(f3(f4(f5.apply(undefined, arguments)))));
+    };
+}, function (f1, f2, f3, f4, f5, f6) {
+    return function () {
+        return f1(f2(f3(f4(f5(f6.apply(undefined, arguments))))));
+    };
+}, function (f1, f2, f3, f4, f5, f6, f7) {
+    return function () {
+        return f1(f2(f3(f4(f5(f6(f7.apply(undefined, arguments)))))));
+    };
+}];
 
 module.exports = function () {
-    for (var _len = arguments.length, funcs = Array(_len), _key = 0; _key < _len; _key++) {
-        funcs[_key] = arguments[_key];
+    for (var _len = arguments.length, fns = Array(_len), _key = 0; _key < _len; _key++) {
+        fns[_key] = arguments[_key];
     }
 
-    check('function', funcs);
+    if (fns.length < compose.length) return compose[fns.length].apply(compose, fns);
 
-    return function () {
-        for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-            args[_key2] = arguments[_key2];
-        }
-
-        return funcs.reduceRight(apply, args).pop();
-    };
+    return bigCompose(fns);
 };
 
-function apply(value, fn) {
-    return [fn.apply(undefined, _toConsumableArray(value))];
-}
+function bigCompose(fns) {
+    return function () {
+        var i = fns.length - 1;
+        var value = fns[i].apply(fns, arguments);
 
-function check(type, array) {
-    var wrongType = partial(wrong, type);
-    var notType = partial(notEqual, type);
-
-    if (!array.length) return wrongType(type);
-
-    array.map(getType).filter(notType).forEach(wrongType);
-}
-
-function partial(fn, value) {
-    return fn.bind(null, value);
-}
-
-function getType(item) {
-    return typeof item === 'undefined' ? 'undefined' : _typeof(item);
-}
-
-function notEqual(a, b) {
-    return a !== b;
-}
-
-function wrong(type) {
-    throw Error('fn should be ' + type + '!');
+        while (--i) {
+            value = fns[i](value);
+        }return value;
+    };
 }
 },{}],"mystery":[function(require,module,exports){
 'use strict';
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 var Emitter = require('events').EventEmitter;
+
 var currify = require('currify/legacy');
+
 var squad = require('squad/legacy');
 
 var chain = require('./chain');
+
 var join = require('./join');
+
 var decouple = require('./transform/decouple');
+
 var pass = require('./transform/pass');
+
 var merge = require('./transform/merge');
 
 var flatten = function flatten(array) {
-    return [].concat.apply([], array);
+  return [].concat.apply([], array);
 };
 
 var pipe = currify(function (emitters, array, fn) {
-    var remover = remove(emitters);
-    var decoupler = chain(decouple());
-    var passer = chain(pass(fn));
-    var merger = chain(merge());
-    var first = decoupler;
-
-    join(flatten([decoupler, emitters, merger, passer, remover]));
-
-    first.emit('item', {
-        status: 'start'
-    });
-
-    first.emit('item', {
-        value: array,
-        index: 0
-    });
-
-    first.emit('item', {
-        status: 'end'
-    });
+  var remover = remove(emitters);
+  var decoupler = chain(decouple());
+  var passer = chain(pass(fn));
+  var merger = chain(merge());
+  var first = decoupler;
+  join(flatten([decoupler, emitters, merger, passer, remover]));
+  first.emit('item', {
+    status: 'start'
+  });
+  first.emit('item', {
+    value: array,
+    index: 0
+  });
+  first.emit('item', {
+    status: 'end'
+  });
 });
-
 module.exports = squad(pipe, mapChain, check);
-
 module.exports.map = require('./transform/map');
 module.exports.filter = require('./transform/filter');
 module.exports.append = require('./transform/append');
@@ -935,33 +937,30 @@ module.exports.pass = pass;
 module.exports.join = join;
 
 function mapChain(funcs) {
-    return funcs.map(function (fn) {
-        return chain(fn);
-    });
+  return funcs.map(function (fn) {
+    return chain(fn);
+  });
 }
 
 function remove(emitters) {
-    return new Emitter().on('item', function (item) {
-        if (item.status !== 'end') return;
-
-        emitters.forEach(function (emitter) {
-            return emitter.removeAllListeners('value');
-        });
+  return new Emitter().on('item', function (item) {
+    if (item.status !== 'end') return;
+    emitters.forEach(function (emitter) {
+      return emitter.removeAllListeners('value');
     });
+  });
 }
 
 function check(funcs) {
-    if (!Array.isArray(funcs)) throw Error('funcs should be an array!');
-
-    funcs.map(function (fn) {
-        return typeof fn === 'undefined' ? 'undefined' : _typeof(fn);
-    }).filter(function (type) {
-        return type !== 'function';
-    }).forEach(function () {
-        throw Error('funcs should contain functions only!');
-    });
-
-    return funcs;
+  if (!Array.isArray(funcs)) throw Error('funcs should be an array!');
+  funcs.map(function (fn) {
+    return _typeof(fn);
+  }).filter(function (type) {
+    return type !== 'function';
+  }).forEach(function () {
+    throw Error('funcs should contain functions only!');
+  });
+  return funcs;
 }
 },{"./chain":1,"./join":2,"./transform/append":3,"./transform/decouple":4,"./transform/filter":5,"./transform/insert":6,"./transform/intersperse":7,"./transform/map":8,"./transform/mapsome":9,"./transform/merge":10,"./transform/pass":11,"./transform/prepend":12,"./transform/sort":13,"./transform/take":15,"./transform/take-last":14,"currify/legacy":16,"events":18,"squad/legacy":20}]},{},["mystery"])("mystery")
 });

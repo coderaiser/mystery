@@ -5,7 +5,7 @@
   "main": "lib/mystery.js",
   "babel": {
     "presets": [
-      "env"
+      "@babel/preset-env"
     ]
   },
   "scripts": {
@@ -54,8 +54,9 @@
     "node": ">=4"
   },
   "devDependencies": {
-    "babel-cli": "^6.9.0",
-    "babel-preset-env": "^1.6.1",
+    "@babel/cli": "^7.0.0",
+    "@babel/core": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
     "browserify": "^16.0.0",
     "coveralls": "^3.0.0",
     "eslint": "^4.0.0",

@@ -218,50 +218,54 @@ module.exports = function (number) {
   });
 };
 },{"./filter":5}],16:[function(require,module,exports){
-module.exports = require('./lib/currify');
-
-},{"./lib/currify":17}],17:[function(require,module,exports){
 'use strict';
 
 var f = function f(fn) {
-    return [
-    /*eslint no-unused-vars: 0*/
-    function (a) {
-        return fn.apply(undefined, arguments);
-    }, function (a, b) {
-        return fn.apply(undefined, arguments);
-    }, function (a, b, c) {
-        return fn.apply(undefined, arguments);
-    }, function (a, b, c, d) {
-        return fn.apply(undefined, arguments);
-    }, function (a, b, c, d, e) {
-        return fn.apply(undefined, arguments);
-    }];
+  return [
+  /*eslint no-unused-vars: 0*/
+  function (a) {
+    return fn.apply(void 0, arguments);
+  }, function (a, b) {
+    return fn.apply(void 0, arguments);
+  }, function (a, b, c) {
+    return fn.apply(void 0, arguments);
+  }, function (a, b, c, d) {
+    return fn.apply(void 0, arguments);
+  }, function (a, b, c, d, e) {
+    return fn.apply(void 0, arguments);
+  }];
 };
 
-module.exports = function currify(fn) {
-    for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-        args[_key - 1] = arguments[_key];
+var currify = function currify(fn) {
+  for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+    args[_key - 1] = arguments[_key];
+  }
+
+  check(fn);
+  if (args.length >= fn.length) return fn.apply(void 0, args);
+
+  var again = function again() {
+    for (var _len2 = arguments.length, args2 = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+      args2[_key2] = arguments[_key2];
     }
 
-    check(fn);
+    return currify.apply(void 0, [fn].concat(args.concat(args2)));
+  };
 
-    if (args.length >= fn.length) return fn.apply(undefined, args);
-
-    var again = function again() {
-        return currify.apply(undefined, [fn].concat(args, Array.prototype.slice.call(arguments)));
-    };
-
-    var count = fn.length - args.length - 1;
-    var func = f(again)[count];
-
-    return func || again;
+  var count = fn.length - args.length - 1;
+  var func = f(again)[count];
+  return func || again;
 };
 
+module.exports = currify;
+
 function check(fn) {
-    if (typeof fn !== 'function') throw Error('fn should be function!');
+  if (typeof fn !== 'function') throw Error('fn should be function!');
 }
-},{}],18:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
+module.exports = require('./currify');
+
+},{"./currify":16}],18:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -883,6 +887,14 @@ function bigCompose(fns) {
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+
+function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+
 var Emitter = require('events').EventEmitter;
 
 var currify = require('currify/legacy');
@@ -900,7 +912,9 @@ var pass = require('./transform/pass');
 var merge = require('./transform/merge');
 
 var flatten = function flatten(array) {
-  return [].concat.apply([], array);
+  var _ref;
+
+  return (_ref = []).concat.apply(_ref, _toConsumableArray(array));
 };
 
 var pipe = currify(function (emitters, array, fn) {
@@ -962,5 +976,5 @@ function check(funcs) {
   });
   return funcs;
 }
-},{"./chain":1,"./join":2,"./transform/append":3,"./transform/decouple":4,"./transform/filter":5,"./transform/insert":6,"./transform/intersperse":7,"./transform/map":8,"./transform/mapsome":9,"./transform/merge":10,"./transform/pass":11,"./transform/prepend":12,"./transform/sort":13,"./transform/take":15,"./transform/take-last":14,"currify/legacy":16,"events":18,"squad/legacy":20}]},{},["mystery"])("mystery")
+},{"./chain":1,"./join":2,"./transform/append":3,"./transform/decouple":4,"./transform/filter":5,"./transform/insert":6,"./transform/intersperse":7,"./transform/map":8,"./transform/mapsome":9,"./transform/merge":10,"./transform/pass":11,"./transform/prepend":12,"./transform/sort":13,"./transform/take":15,"./transform/take-last":14,"currify/legacy":17,"events":18,"squad/legacy":20}]},{},["mystery"])("mystery")
 });

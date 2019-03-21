@@ -1,22 +1,24 @@
 'use strict';
 
-const test = require('tape');
+const test = require('supertape');
 const mystery = require('..');
 
-const map = mystery.map;
-const filter = mystery.filter;
-const append = mystery.append;
-const prepend = mystery.prepend;
-const sort = mystery.sort;
-const insert = mystery.insert;
-const intersperse = mystery.intersperse;
-const decouple = mystery.decouple;
-const mapsome = mystery.mapsome;
+const {
+    map,
+    filter,
+    append,
+    prepend,
+    sort,
+    insert,
+    intersperse,
+    decouple,
+    mapsome,
+} = mystery;
 
 test('use a few filters', (t) => {
     const fn = mystery([
-        filter(a => a > 1),
-        map(a => ++a)
+        filter((a) => a > 1),
+        map((a) => ++a),
     ]);
     
     fn([1, 2, 3, 4], (array) => {
@@ -27,8 +29,8 @@ test('use a few filters', (t) => {
 
 test('reuse mystery mapper', (t) => {
     const fn = mystery([
-        filter(a => a > 1),
-        map(a => ++a)
+        filter((a) => a > 1),
+        map((a) => ++a),
     ]);
     
     fn([1, 2, 3, 4], (array) => {
@@ -43,7 +45,7 @@ test('reuse mystery mapper', (t) => {
 
 test('append', (t) => {
     const fn = mystery([
-        append([9, 8, 7, 6])
+        append([9, 8, 7, 6]),
     ]);
     
     fn([1, 2, 3], (array) => {
@@ -54,7 +56,7 @@ test('append', (t) => {
 
 test('prepend', (t) => {
     const fn = mystery([
-        prepend([10])
+        prepend([10]),
     ]);
     
     fn([1, 2, 3], (array) => {
@@ -67,7 +69,7 @@ test('filter + map + append', (t) => {
     const fn = mystery([
         filter((a) => a > 1),
         map((a) => a * a),
-        append([3, 1, 3, 3])
+        append([3, 1, 3, 3]),
     ]);
     
     fn([1, 2, 3], (array) => {
@@ -77,10 +79,10 @@ test('filter + map + append', (t) => {
 });
 
 test('take', (t) => {
-    const take = mystery.take;
+    const {take} = mystery;
     
     const fn = mystery([
-        take(2)
+        take(2),
     ]);
     
     fn([1, 2, 3], (array) => {
@@ -90,10 +92,10 @@ test('take', (t) => {
 });
 
 test('takeLast', (t) => {
-    const takeLast = mystery.takeLast;
+    const {takeLast} = mystery;
     
     const fn = mystery([
-        takeLast(2)
+        takeLast(2),
     ]);
     
     fn([1, 2, 3, 4, 5], (array) => {
@@ -104,7 +106,7 @@ test('takeLast', (t) => {
 
 test('sort', (t) => {
     const fn = mystery([
-        sort((a, b) => a - b)
+        sort((a, b) => a - b),
     ]);
     
     fn([3, 20, 1, 5], (array) => {
@@ -115,7 +117,7 @@ test('sort', (t) => {
 
 test('insert', (t) => {
     const fn = mystery([
-        insert(2, 'hello')
+        insert(2, 'hello'),
     ]);
     
     fn([3, 20, 1], (array) => {
@@ -126,7 +128,7 @@ test('insert', (t) => {
 
 test('intersperse', (t) => {
     const fn = mystery([
-        intersperse('|')
+        intersperse('|'),
     ]);
     
     fn([1, 2, 3, 4], (array) => {
@@ -137,7 +139,7 @@ test('intersperse', (t) => {
 
 test('decouple', (t) => {
     const fn = mystery([
-        decouple()
+        decouple(),
     ]);
     
     fn([[1, 2, 3], 4, [5, 6]], (array) => {
@@ -148,30 +150,30 @@ test('decouple', (t) => {
 
 test('mapsome', (t) => {
     const expect = {
-        name: 'mystery'
+        name: 'mystery',
     };
     
     const packages = {
         '/home/coderaiser': {
             error: Error('no'),
-            info: null
+            info: null,
         },
         '/home': {
             error: Error('no'),
-            info: null
+            info: null,
         },
         '/': {
             error: null,
-            info: expect
+            info: expect,
         },
         '': {
             error: Error(''),
-            info: null
-        }
+            info: null,
+        },
     };
     
     const find = mystery([
-        mapsome((dir) => packages[dir].info)
+        mapsome((dir) => packages[dir].info),
     ]);
     
     find(['/home/coderaiser', '/home', '/', ''], (array) => {
@@ -188,9 +190,9 @@ test('arguments: no', (t) => {
 
 test('arguments: not function', (t) => {
     const fn = () => {
-       mystery([
-           'hello'
-       ]);
+        mystery([
+            'hello',
+        ]);
     };
     t.throws(fn, /funcs should contain functions only!/, 'should throw when arguments no function');
     t.end();

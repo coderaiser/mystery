@@ -1,3 +1,9 @@
+2020.01.28, v3.0.1
+
+fix:
+- (mystery) rm bower, dist, legacy
+
+
 2020.01.28, v3.0.0
 
 feature:

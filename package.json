@@ -50,7 +50,7 @@
     "eslint-plugin-node": "^11.0.0",
     "eslint-plugin-putout": "^3.2.1",
     "madrun": "^5.4.1",
-    "nodemon": "^1.9.2",
+    "nodemon": "^2.0.2",
     "nyc": "^15.0.0",
     "putout": "^7.7.1",
     "supertape": "^1.2.3"

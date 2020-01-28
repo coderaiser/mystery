@@ -71,7 +71,7 @@
     "supertape": "^1.2.3"
   },
   "dependencies": {
-    "currify": "^3.0.0",
+    "currify": "^4.0.0",
     "mapa": "^2.0.0",
     "squad": "^3.0.0"
   },

@@ -67,7 +67,7 @@
     "mkdirp": "^0.5.1",
     "nodemon": "^1.9.2",
     "nyc": "^15.0.0",
-    "putout": "^4.16.1",
+    "putout": "^7.7.1",
     "supertape": "^1.2.3"
   },
   "dependencies": {
